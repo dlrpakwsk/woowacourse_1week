@@ -29,31 +29,27 @@ public class StringCalculator {
 
     private static int sum(String[] numbers) {
         int total = 0;
-
         for (String number : numbers) {
             total += parsePositiveNumber(number);
         }
-
         return total;
     }
 
     private static int parsePositiveNumber(String value) {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("구분자만 있거나 빈 값이 포함되어 있습니다.");
+            throw new IllegalArgumentException();
         }
 
         value = value.trim();
 
-        // ✅ 음수 직접 감지
         if (value.startsWith("-")) {
-            throw new IllegalArgumentException("음수는 허용되지 않습니다: " + value);
+            throw new IllegalArgumentException();
         }
 
         try {
-            int num = Integer.parseInt(value);
-            return num;
+            return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("숫자가 아닌 값이 포함되어 있습니다: " + value);
+            throw new IllegalArgumentException();
         }
     }
 }
