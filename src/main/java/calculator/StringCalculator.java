@@ -24,12 +24,15 @@ public class StringCalculator {
             String numbers = matcher.group(2);
             return numbers.split(Pattern.quote(customDelimiter));
         }
-        
-        matcher = Pattern.compile("//(.)\\\\r?\\\\n(.*)").matcher(input);
-        if (matcher.matches()) {
-            String customDelimiter = matcher.group(1);
-            String numbers = matcher.group(2);
-            return numbers.split(Pattern.quote(customDelimiter));
+
+        if (input.contains("\\n")) {
+            input = input.replace("\\r", "").replace("\\n", "\n"); // 실제 줄바꿈으로 변환
+            matcher = Pattern.compile("//(.)\\n(.*)").matcher(input);
+            if (matcher.matches()) {
+                String customDelimiter = matcher.group(1);
+                String numbers = matcher.group(2);
+                return numbers.split(Pattern.quote(customDelimiter));
+            }
         }
 
         return input.split(DEFAULT_DELIMITERS);
@@ -37,11 +40,9 @@ public class StringCalculator {
 
     private static int sum(String[] numbers) {
         int total = 0;
-
         for (String number : numbers) {
             total += parsePositiveNumber(number);
         }
-
         return total;
     }
 
@@ -51,7 +52,6 @@ public class StringCalculator {
         }
 
         value = value.trim();
-
         if (value.startsWith("-")) {
             throw new IllegalArgumentException();
         }
