@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringCalculator {
+
     private static final String DEFAULT_DELIMITERS = "[,:]";
 
     public static int add(String input) {
@@ -16,8 +17,15 @@ public class StringCalculator {
     }
 
     private static String[] split(String input) {
-        Matcher matcher = Pattern.compile("//(.)\\n(.*)").matcher(input);
 
+        Matcher matcher = Pattern.compile("//(.)\\r?\\n(.*)").matcher(input);
+        if (matcher.matches()) {
+            String customDelimiter = matcher.group(1);
+            String numbers = matcher.group(2);
+            return numbers.split(Pattern.quote(customDelimiter));
+        }
+        
+        matcher = Pattern.compile("//(.)\\\\r?\\\\n(.*)").matcher(input);
         if (matcher.matches()) {
             String customDelimiter = matcher.group(1);
             String numbers = matcher.group(2);
@@ -29,9 +37,11 @@ public class StringCalculator {
 
     private static int sum(String[] numbers) {
         int total = 0;
+
         for (String number : numbers) {
             total += parsePositiveNumber(number);
         }
+
         return total;
     }
 
